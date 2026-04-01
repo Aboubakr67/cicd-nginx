@@ -22,4 +22,5 @@ jobs:
       - name: Exposer avec localtunnel
         run: |
           npm install -g localtunnel
-          lt --port 8080
+          lt --port 8080 &
+          sleep 120
