@@ -23,3 +23,4 @@ jobs:
         run: |
           IP=$(curl -s ifconfig.me)
           echo "Site accessible sur http://$IP:8088"
+          sleep 120
