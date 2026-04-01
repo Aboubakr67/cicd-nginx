@@ -13,19 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            cd ~/cicd-nginx
-            git pull origin main
-            docker build -t cicd-nginx .
-            docker stop cicd-nginx || true
-            docker rm cicd-nginx || true
-            docker run -d --name cicd-nginx -p 8088:80 --restart unless-stopped cicd-nginx
+      - name: Build image Docker
+        run: docker build -t cicd-nginx .
+
+      - name: Lancer le conteneur
+        run: docker run -d --name cicd-nginx -p 8088:80 cicd-nginx
 
       - name: Afficher l'IP du serveur
-        run: echo "Site accessible sur http://${{ secrets.SERVER_IP }}:8088"
+        run: |
+          IP=$(curl -s ifconfig.me)
+          echo "Site accessible sur http://$IP:8088"
